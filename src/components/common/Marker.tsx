@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
+import { ThreeEvent } from "@react-three/fiber";
 
 type MarkerProps = {
     id: string;
@@ -72,11 +73,11 @@ export default function Marker({
 
                 onHoverEnd?.();
             }}
-            onClick={(e) => {
+            onClick={(e: ThreeEvent<MouseEvent>) => {
                 e.stopPropagation();
-
                 onClick?.();
             }}
+
         >
             <sphereGeometry args={[radius, 8, 8]} />
 

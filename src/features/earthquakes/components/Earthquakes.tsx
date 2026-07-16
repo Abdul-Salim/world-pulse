@@ -2,7 +2,7 @@
 
 import useEarthquakes from "@/features/earthquakes/hooks/useEarthquakes";
 import { latLngToVector } from "@/utils/latLngToVector";
-import EarthquakeMarker from "./EarthquakeMarker";
+import { EarthquakeMarker } from "@/features/earthquakes";
 
 function getMagnitudeColor(mag: number) {
 

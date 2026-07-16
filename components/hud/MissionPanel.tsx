@@ -2,12 +2,12 @@
 
 import { motion } from "framer-motion";
 
-import { useWorldStore } from "@/store/worldstore";
+import { useEarthquakeStore } from "@/features/earthquakes";
 
 export default function MissionPanel() {
-    const quake = useWorldStore((s) => s.selectedEarthquake);
+    const quake = useEarthquakeStore((s) => s.selectedEarthquake);
 
-    const setSelected = useWorldStore(
+    const setSelected = useEarthquakeStore(
         s => s.setSelectedEarthquake
     );
 

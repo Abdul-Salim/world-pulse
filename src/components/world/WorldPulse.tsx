@@ -8,17 +8,19 @@ import EarthScene from "@/features/earthquakes/components/EarthScene";
 import LayerToolbar from "../hud/LayerToolbar";
 import EarthquakePanel from "../../../components/hud/EarthquakePanel";
 import HoverTooltip from "../hud/HoverTooltip";
-import { useWorldStore } from "@/store/worldstore";
+import { useEarthquakeStore } from "@/features/earthquakes";
+import { useAppStore } from "@/store/appStore";
 import MissionPanel from "../../../components/hud/MissionPanel";
+import CountryTooltip from "../hud/CountryTooltip";
 
 export default function WorldPulse() {
     const [bootComplete, setBootComplete] = useState(false);
 
-    const setSelectedEarthquake = useWorldStore(
+    const setSelectedEarthquake = useEarthquakeStore(
         (state) => state.setSelectedEarthquake
     );
 
-    const setCameraTarget = useWorldStore(
+    const setCameraTarget = useAppStore(
         (state) => state.setCameraTarget
     );
 
@@ -45,6 +47,7 @@ export default function WorldPulse() {
     return (
         <main className="relative h-screen w-screen overflow-hidden bg-black">
             <HoverTooltip />
+            <CountryTooltip />
             <MissionPanel />
             <EarthScene active={bootComplete} />
 

@@ -1,13 +1,14 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
 
 import CameraRig from "./CameraRig";
 import Lighting from "./Lighting";
 import Environment from "./Environment";
 import Earth from "./Earth";
 import Effects from "./Effects";
+import OrbitController from "@/components/common/OrbitController";
+import { CountryBorders } from "@/features/countries";
 
 type Props = {
     active: boolean;
@@ -33,20 +34,12 @@ export default function EarthScene({ active }: Props) {
 
                 <Earth active={active} />
 
+                <CountryBorders />
+
+
                 <Effects />
 
-                <OrbitControls
-                    makeDefault
-                    enablePan={false}
-                    enableRotate
-                    enableZoom
-                    enableDamping
-                    dampingFactor={0.08}
-                    rotateSpeed={0.7}
-                    minDistance={4}
-                    maxDistance={10}
-                    autoRotate={false}
-                />
+                <OrbitController />
             </Canvas>
         </div>
     );

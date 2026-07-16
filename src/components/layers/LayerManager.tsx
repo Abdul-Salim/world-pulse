@@ -1,12 +1,12 @@
 "use client";
 
-import { useWorldStore } from "@/store/worldstore";
-import { LayerType } from "@/features/earthquakes/types/layers";
+import { useAppStore } from "@/store/appStore";
 
-import Earthquakes from "./Earthquakes";
+import { Earthquakes } from "@/features/earthquakes";
+import { LayerType } from "@/types/layers";
 
 export default function LayerManager() {
-    const layer = useWorldStore((s) => s.activeLayer);
+    const layer = useAppStore((s) => s.activeLayer);
 
     return (
         <>

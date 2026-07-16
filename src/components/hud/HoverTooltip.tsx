@@ -1,9 +1,9 @@
 "use client";
 
-import { useWorldStore } from "@/store/worldstore";
+import { useEarthquakeStore } from "@/features/earthquakes";
 
 export default function HoverTooltip() {
-    const quake = useWorldStore(
+    const quake = useEarthquakeStore(
         s => s.hoveredEarthquake
     );
 

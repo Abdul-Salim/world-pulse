@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
-import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
-import { useWorldStore } from "@/store/worldstore";
+import { cameraController } from "@/controllers/CameraController";
 
 type Props = {
     active: boolean;
@@ -14,10 +13,17 @@ type Props = {
 
 export default function CameraRig({ active }: Props) {
     const { camera } = useThree();
-    const target =
-        useWorldStore(
-            s => s.cameraTarget
+
+    useEffect(() => {
+        cameraController.registerCamera(
+            camera as THREE.PerspectiveCamera
         );
+
+        return () => {
+            cameraController.unregisterCamera();
+        };
+    }, [camera]);
+
     useEffect(() => {
         if (!active) {
             camera.position.set(0, 0, 2.8);
@@ -26,24 +32,13 @@ export default function CameraRig({ active }: Props) {
         }
 
         gsap.to(camera.position, {
-            z: 6,
-            duration: 4,
-            ease: "power2.out",
-        });
-
-        gsap.to(camera.position, {
             x: 0.6,
-            duration: 4,
-            ease: "power2.out",
-        });
-
-        gsap.to(camera.position, {
             y: 0.2,
-            duration: 4,
+            z: 6,
+            duration: 3,
             ease: "power2.out",
         });
     }, [active, camera]);
-
 
     return null;
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { useWorldStore } from "@/store/worldstore";
+import { useEarthquakeStore } from "@/features/earthquakes";
 
 export default function EarthquakePanel() {
 
     const quake =
-        useWorldStore(
+        useEarthquakeStore(
             s => s.selectedEarthquake
         );
 

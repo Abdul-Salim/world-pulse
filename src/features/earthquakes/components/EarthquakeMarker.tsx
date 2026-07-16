@@ -4,8 +4,9 @@ import * as THREE from "three";
 
 import Marker from "@/components/common/Marker";
 import { Earthquake } from "@/features/earthquakes/types/earthquake";
-import { useWorldStore } from "@/store/worldstore";
-
+import { useEarthquakeStore } from "@/features/earthquakes";
+import { useAppStore } from "@/store/appStore";
+import { cameraController } from "@/controllers/CameraController";
 type Props = {
     quake: Earthquake;
     position: THREE.Vector3;
@@ -17,19 +18,16 @@ export default function EarthquakeMarker({
     position,
     color,
 }: Props) {
-    const setHovered = useWorldStore(
+    const setHovered = useEarthquakeStore(
         (s) => s.setHoveredEarthquake
     );
 
-    const setSelected = useWorldStore(
+    const setSelected = useEarthquakeStore(
         (s) => s.setSelectedEarthquake
     );
 
-    const setCameraTarget = useWorldStore(
-        (s) => s.setCameraTarget
-    );
 
-    const selected = useWorldStore(
+    const selected = useEarthquakeStore(
         s => s.selectedEarthquake?.id === quake.id
     );
 
@@ -44,7 +42,7 @@ export default function EarthquakeMarker({
             onHoverEnd={() => setHovered(null)}
             onClick={() => {
                 setSelected(quake);
-                setCameraTarget(position.clone());
+                cameraController.flyTo(position);
             }}
         />
     );

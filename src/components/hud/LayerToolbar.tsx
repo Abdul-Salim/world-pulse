@@ -1,11 +1,11 @@
 "use client";
 
-import { LayerType } from "@/features/earthquakes/types/layers";
-import { useWorldStore } from "@/store/worldstore";
+import { useAppStore } from "@/store/appStore";
+import { LayerType } from "@/types/layers";
 
 export default function LayerToolbar() {
-    const active = useWorldStore((s) => s.activeLayer);
-    const setLayer = useWorldStore((s) => s.setActiveLayer);
+    const active = useAppStore((s) => s.activeLayer);
+    const setLayer = useAppStore((s) => s.setActiveLayer);
 
     return (
         <div className="absolute left-6 top-6 z-50 flex gap-2">
