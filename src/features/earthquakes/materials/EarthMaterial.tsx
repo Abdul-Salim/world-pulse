@@ -1,7 +1,7 @@
 "use client";
 
 import { MeshStandardMaterial } from "three";
-import useEarthTextures from "@/hooks/useEarthTextures";
+import useEarthTextures from "@/features/earthquakes/hooks/useEarthTextures";
 
 export default function EarthMaterial() {
     const textures = useEarthTextures();

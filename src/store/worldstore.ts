@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import * as THREE from "three";
 
-import { Earthquake } from "@/types/earthquake";
-import { LayerType } from "@/types/layers";
+import { Earthquake } from "@/features/earthquakes/types/earthquake";
+import { LayerType } from "@/features/earthquakes/types/layers";
 
 type WorldState = {
   // Layer State

@@ -1,7 +1,7 @@
 "use client";
 
 import { useWorldStore } from "@/store/worldstore";
-import { LayerType } from "@/types/layers";
+import { LayerType } from "@/features/earthquakes/types/layers";
 
 import Earthquakes from "./Earthquakes";
 

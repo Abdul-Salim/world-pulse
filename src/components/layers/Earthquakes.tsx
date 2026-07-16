@@ -1,6 +1,6 @@
 "use client";
 
-import useEarthquakes from "@/hooks/useEarthquakes";
+import useEarthquakes from "@/features/earthquakes/hooks/useEarthquakes";
 import { latLngToVector } from "@/utils/latLngToVector";
 import EarthquakeMarker from "./EarthquakeMarker";
 
@@ -30,6 +30,7 @@ export default function Earthquakes() {
 
                 return (
                     <EarthquakeMarker
+                        key={quake?.id}
                         quake={quake}
                         position={pos}
                         color={getMagnitudeColor(quake.magnitude)}

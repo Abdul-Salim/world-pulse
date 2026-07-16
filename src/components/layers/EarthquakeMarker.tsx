@@ -3,7 +3,7 @@
 import * as THREE from "three";
 
 import Marker from "@/components/common/Marker";
-import { Earthquake } from "@/types/earthquake";
+import { Earthquake } from "@/features/earthquakes/types/earthquake";
 import { useWorldStore } from "@/store/worldstore";
 
 type Props = {

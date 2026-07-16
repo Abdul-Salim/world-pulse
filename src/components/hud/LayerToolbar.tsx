@@ -1,6 +1,6 @@
 "use client";
 
-import { LayerType } from "@/types/layers";
+import { LayerType } from "@/features/earthquakes/types/layers";
 import { useWorldStore } from "@/store/worldstore";
 
 export default function LayerToolbar() {

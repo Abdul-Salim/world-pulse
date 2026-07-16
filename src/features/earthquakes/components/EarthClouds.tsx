@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import * as THREE from "three";
 
-import useEarthTextures from "@/hooks/useEarthTextures";
+import useEarthTextures from "@/features/earthquakes/hooks/useEarthTextures";
 import {
     CLOUD_RADIUS,
 } from "@/lib/constants";

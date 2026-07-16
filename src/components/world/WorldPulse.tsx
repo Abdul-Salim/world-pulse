@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
 
 import BootSequence from "@/components/boot/BootSequence";
-import EarthScene from "@/components/earth/EarthScene";
+import EarthScene from "@/features/earthquakes/components/EarthScene";
 import LayerToolbar from "../hud/LayerToolbar";
 import EarthquakePanel from "../../../components/hud/EarthquakePanel";
 import HoverTooltip from "../hud/HoverTooltip";

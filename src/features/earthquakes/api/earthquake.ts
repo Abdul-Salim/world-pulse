@@ -1,4 +1,4 @@
-import { Earthquake } from "@/types/earthquake";
+import { Earthquake } from "@/features/earthquakes/types/earthquake";
 
 export async function getEarthquakes(): Promise<Earthquake[]> {
   const response = await fetch(
