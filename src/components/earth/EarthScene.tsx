@@ -36,9 +36,16 @@ export default function EarthScene({ active }: Props) {
                 <Effects />
 
                 <OrbitControls
-                    enableRotate={false}
-                    enableZoom={false}
+                    makeDefault
                     enablePan={false}
+                    enableRotate
+                    enableZoom
+                    enableDamping
+                    dampingFactor={0.08}
+                    rotateSpeed={0.7}
+                    minDistance={4}
+                    maxDistance={10}
+                    autoRotate={false}
                 />
             </Canvas>
         </div>

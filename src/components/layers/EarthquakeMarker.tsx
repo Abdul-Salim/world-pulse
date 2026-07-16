@@ -1,45 +1,51 @@
 "use client";
 
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
+import Marker from "@/components/common/Marker";
+import { Earthquake } from "@/types/earthquake";
+import { useWorldStore } from "@/store/worldstore";
+
 type Props = {
+    quake: Earthquake;
     position: THREE.Vector3;
-    magnitude: number;
     color: string;
 };
 
 export default function EarthquakeMarker({
+    quake,
     position,
-    magnitude,
     color,
 }: Props) {
-    const mesh = useRef<THREE.Mesh>(null);
+    const setHovered = useWorldStore(
+        (s) => s.setHoveredEarthquake
+    );
 
-    useFrame((state) => {
-        if (!mesh.current) return;
+    const setSelected = useWorldStore(
+        (s) => s.setSelectedEarthquake
+    );
 
-        const pulse =
-            1 + Math.sin(state.clock.elapsedTime * 4) * 0.2;
+    const setCameraTarget = useWorldStore(
+        (s) => s.setCameraTarget
+    );
 
-        mesh.current.scale.setScalar(pulse);
-    });
+    const selected = useWorldStore(
+        s => s.selectedEarthquake?.id === quake.id
+    );
 
     return (
-        <mesh
-            ref={mesh}
+        <Marker
+            id={`quake-${quake.id}`}
             position={position}
-        >
-            <sphereGeometry
-                args={[
-                    Math.max(0.012, magnitude * 0.006),
-                    12,
-                    12,
-                ]}
-            />
-
-            <meshBasicMaterial color={color} />
-        </mesh>
+            radius={Math.max(0.012, quake.magnitude * 0.006)}
+            color={color}
+            pulse={selected || quake.magnitude >= 6}
+            onHover={() => setHovered(quake)}
+            onHoverEnd={() => setHovered(null)}
+            onClick={() => {
+                setSelected(quake);
+                setCameraTarget(position.clone());
+            }}
+        />
     );
 }

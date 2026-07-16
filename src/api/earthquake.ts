@@ -16,5 +16,9 @@ export async function getEarthquakes(): Promise<Earthquake[]> {
     longitude: item.geometry.coordinates[0],
     latitude: item.geometry.coordinates[1],
     depth: item.geometry.coordinates[2],
+    url: item.properties.url,
+    status: item.properties.status,
+    felt: item.properties.felt,
+    tsunami: item.properties.tsunami,
   }));
 }

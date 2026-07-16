@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
-import { useFrame } from "@react-three/fiber";
 
 import EarthSurface from "./EarthSurface";
 import EarthClouds from "./EarthClouds";
@@ -34,16 +33,10 @@ export default function Earth({ active = false }: Props) {
         });
     }, [active]);
 
-    useFrame((_, delta) => {
-        if (!group.current) return;
-
-        group.current.rotation.y += delta * 0.008;
-    });
-
     return (
         <group
             ref={group}
-            position={[1.1, -0.25, 0]}
+            position={[0, 0, 0]}
         >
             <EarthSurface />
 
