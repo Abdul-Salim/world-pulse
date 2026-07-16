@@ -3,18 +3,17 @@
 export default function Lighting() {
     return (
         <>
-            <ambientLight intensity={0.08} />
+            <ambientLight intensity={0.03} />
 
             <directionalLight
-                position={[12, 4, 8]}
-                intensity={3.5}
-                color="#ffffff"
+                position={[12, 3, 8]}
+                intensity={5}
             />
 
             <directionalLight
-                position={[-6, -3, -5]}
-                intensity={0.12}
-                color="#2d5cff"
+                position={[-10, -4, -8]}
+                intensity={0.15}
+                color="#2a5cff"
             />
         </>
     );

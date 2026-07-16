@@ -5,6 +5,7 @@ import { AnimatePresence } from "motion/react";
 
 import BootSequence from "@/components/boot/BootSequence";
 import EarthScene from "@/components/earth/EarthScene";
+import LayerToolbar from "../hud/LayerToolbar";
 
 export default function WorldPulse() {
     const [bootComplete, setBootComplete] = useState(false);
@@ -13,6 +14,7 @@ export default function WorldPulse() {
         <main className="relative h-screen w-screen overflow-hidden bg-black">
             <EarthScene active={bootComplete} />
 
+            {bootComplete && <LayerToolbar />}
             <AnimatePresence>
                 {!bootComplete && (
                     <BootSequence

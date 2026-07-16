@@ -1,17 +1,19 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 
-import Earth from "./Earth";
-import Lighting from "./Lighting";
-import Stars from "./Stars";
 import CameraRig from "./CameraRig";
+import Lighting from "./Lighting";
+import Environment from "./Environment";
+import Earth from "./Earth";
+import Effects from "./Effects";
 
-type EarthSceneProps = {
+type Props = {
     active: boolean;
 };
 
-export default function EarthScene({ active }: EarthSceneProps) {
+export default function EarthScene({ active }: Props) {
     return (
         <div className="absolute inset-0">
             <Canvas
@@ -27,9 +29,17 @@ export default function EarthScene({ active }: EarthSceneProps) {
 
                 <Lighting />
 
-                <Stars active={active} />
+                <Environment active={active} />
 
                 <Earth active={active} />
+
+                <Effects />
+
+                <OrbitControls
+                    enableRotate={false}
+                    enableZoom={false}
+                    enablePan={false}
+                />
             </Canvas>
         </div>
     );

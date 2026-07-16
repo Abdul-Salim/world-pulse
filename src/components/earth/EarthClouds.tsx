@@ -4,7 +4,7 @@ import { useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
-import { useEarthTextures } from "@/hooks/useEarthTextures";
+import useEarthTextures from "@/hooks/useEarthTextures";
 import {
     CLOUD_RADIUS,
     CLOUD_ROTATION_SPEED,
@@ -29,8 +29,9 @@ export default function EarthClouds() {
             <meshStandardMaterial
                 map={textures.clouds}
                 transparent
-                opacity={0.45}
+                opacity={0.18}
                 depthWrite={false}
+                alphaTest={0.05}
             />
         </mesh>
     );
