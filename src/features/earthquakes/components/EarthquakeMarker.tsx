@@ -3,10 +3,13 @@
 import * as THREE from "three";
 
 import Marker from "@/components/common/Marker";
-import { Earthquake } from "@/features/earthquakes/types/earthquake";
-import { useEarthquakeStore } from "@/features/earthquakes";
-import { useAppStore } from "@/store/appStore";
 import { cameraController } from "@/controllers/CameraController";
+
+import { useEarthquakeStore } from "@/features/earthquakes";
+import { Earthquake } from "@/features/earthquakes/types/earthquake";
+
+import { useNavigationStore } from "@/features/navigator/store/navigationStore";
+
 type Props = {
     quake: Earthquake;
     position: THREE.Vector3;
@@ -22,27 +25,44 @@ export default function EarthquakeMarker({
         (s) => s.setHoveredEarthquake
     );
 
-    const setSelected = useEarthquakeStore(
-        (s) => s.setSelectedEarthquake
+    const target = useNavigationStore(
+        (s) => s.target
     );
 
-
-    const selected = useEarthquakeStore(
-        s => s.selectedEarthquake?.id === quake.id
+    const setTarget = useNavigationStore(
+        (s) => s.setTarget
     );
+
+    const selected =
+        target?.id === `quake-${quake.id}`;
 
     return (
         <Marker
             id={`quake-${quake.id}`}
             position={position}
-            radius={Math.max(0.012, quake.magnitude * 0.006)}
+            radius={Math.max(
+                0.012,
+                quake.magnitude * 0.006
+            )}
             color={color}
             pulse={selected || quake.magnitude >= 6}
             onHover={() => setHovered(quake)}
             onHoverEnd={() => setHovered(null)}
             onClick={() => {
-                setSelected(quake);
-                cameraController.flyTo(position);
+                setTarget({
+                    id: `quake-${quake.id}`,
+                    title: `M ${quake.magnitude.toFixed(1)}`,
+                    subtitle: quake.place,
+                    lat: quake.latitude,
+                    lon: quake.longitude,
+                    type: "earthquake",
+                    metadata: quake,
+                });
+
+                cameraController.flyToLatLng(
+                    quake.latitude,
+                    quake.longitude
+                );
             }}
         />
     );

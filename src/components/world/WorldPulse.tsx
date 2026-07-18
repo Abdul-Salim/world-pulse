@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
 
 import BootSequence from "@/components/boot/BootSequence";
-import EarthScene from "@/features/earthquakes/components/EarthScene";
-import LayerToolbar from "../hud/LayerToolbar";
-import EarthquakePanel from "../../../components/hud/EarthquakePanel";
-import HoverTooltip from "../hud/HoverTooltip";
+import EarthScene from "@/components/ui/globe/EarthScene";
+import EarthquakePanel from "../ui/globe/EarthquakePanel";
+import HoverTooltip from "../ui/HoverTooltip";
 import { useEarthquakeStore } from "@/features/earthquakes";
 import { useAppStore } from "@/store/appStore";
-import MissionPanel from "../../../components/hud/MissionPanel";
-import CountryTooltip from "../hud/CountryTooltip";
+import MissionPanel from "../ui/panels/MissionPanel";
+import CountryTooltip from "../ui/CountryTooltip";
+import Navigator from "@/features/navigator/components/Navigator";
+import Header from "../ui/header/Header";
 
 export default function WorldPulse() {
     const [bootComplete, setBootComplete] = useState(false);
@@ -49,9 +50,11 @@ export default function WorldPulse() {
             <HoverTooltip />
             <CountryTooltip />
             <MissionPanel />
+            <Navigator />
+
             <EarthScene active={bootComplete} />
 
-            {bootComplete && <LayerToolbar />}
+            {bootComplete && <Header />}
             <EarthquakePanel />
             <AnimatePresence>
                 {!bootComplete && (

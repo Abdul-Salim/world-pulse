@@ -2,9 +2,20 @@ import * as THREE from "three";
 import type { OrbitControls } from "three-stdlib";
 import gsap from "gsap";
 
+import { latLngToVector } from "@/utils/latLngToVector";
+
+interface FlyToOptions {
+  distance?: number;
+  duration?: number;
+}
+
 class CameraController {
   private camera: THREE.PerspectiveCamera | null = null;
   private controls: OrbitControls | null = null;
+
+  private readonly DEFAULT_DISTANCE = 3;
+  private readonly DEFAULT_DURATION = 2;
+  private readonly CAMERA_OFFSET = new THREE.Vector3(0.6, 0.3, 0);
 
   registerCamera(camera: THREE.PerspectiveCamera) {
     this.camera = camera;
@@ -22,69 +33,68 @@ class CameraController {
     this.controls = null;
   }
 
-  flyTo(target: THREE.Vector3) {
-    if (!this.camera || !this.controls) return;
+  flyToLatLng(
+    lat: number,
+    lon: number,
+    options: FlyToOptions = {}
+  ) {
+    const target = latLngToVector(lat, lon);
 
-    const destination = target
-    .clone()
-    .normalize()
-    .multiplyScalar(5);
-  
-    destination.x += 0.6;
-    destination.y += 0.3;
-
-    gsap.killTweensOf(this.camera.position);
-    gsap.killTweensOf(this.controls.target);
-
-    gsap.to(this.camera.position, {
-      x: destination.x,
-      y: destination.y,
-      z: destination.z,
-      duration: 2,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        this.controls?.update();
-      },
-    });
-
-    gsap.to(this.controls.target, {
-      x: target.x,
-      y: target.y,
-      z: target.z,
-      duration: 2,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        this.controls?.update();
-      },
-    });
+    this.flyTo(target, options);
   }
 
-  reset() {
+  reset(duration = this.DEFAULT_DURATION) {
+    this.animate(
+      new THREE.Vector3(0, 0, 6),
+      new THREE.Vector3(0, 0, 0),
+      duration
+    );
+  }
+
+  private flyTo(
+    target: THREE.Vector3,
+    options: FlyToOptions = {}
+  ) {
+    const {
+      distance = this.DEFAULT_DISTANCE,
+      duration = this.DEFAULT_DURATION,
+    } = options;
+
+    const destination = target
+      .clone()
+      .normalize()
+      .multiplyScalar(distance)
+      .add(this.CAMERA_OFFSET);
+
+    this.animate(destination, target, duration);
+  }
+
+  private animate(
+    cameraPosition: THREE.Vector3,
+    lookAt: THREE.Vector3,
+    duration: number
+  ) {
     if (!this.camera || !this.controls) return;
 
     gsap.killTweensOf(this.camera.position);
     gsap.killTweensOf(this.controls.target);
 
     gsap.to(this.camera.position, {
-      x: 0,
-      y: 0,
-      z: 6,
-      duration: 2,
+      x: cameraPosition.x,
+      y: cameraPosition.y,
+      z: cameraPosition.z,
+      duration,
       ease: "power2.inOut",
-      onUpdate: () => {
-        this.controls?.update();
-      },
+      onUpdate: () => this.controls?.update(),
     });
 
     gsap.to(this.controls.target, {
-      x: 0,
-      y: 0,
-      z: 0,
-      duration: 2,
+      x: lookAt.x,
+      y: lookAt.y,
+      z: lookAt.z,
+      duration,
       ease: "power2.inOut",
-      onUpdate: () => {
-        this.controls?.update();
-      },
+      onUpdate: () => this.controls?.update(),
     });
   }
 }

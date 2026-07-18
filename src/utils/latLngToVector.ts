@@ -1,9 +1,10 @@
+import { EARTH_RADIUS } from "@/lib/constants";
 import * as THREE from "three";
 
 export function latLngToVector(
   lat: number,
   lon: number,
-  radius: number
+  radius: number = EARTH_RADIUS
 ) {
   const phi = (90 - lat) * Math.PI / 180;
   const theta = (lon + 180) * Math.PI / 180;

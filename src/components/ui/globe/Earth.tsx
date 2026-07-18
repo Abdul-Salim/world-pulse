@@ -7,7 +7,7 @@ import gsap from "gsap";
 import EarthSurface from "./EarthSurface";
 import EarthClouds from "./EarthClouds";
 import Atmosphere from "./Atmosphere";
-import LayerManager from "../../../components/layers/LayerManager";
+import LayerManager from "../../layers/LayerManager";
 
 type Props = {
     active?: boolean;
