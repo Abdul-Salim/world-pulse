@@ -8,7 +8,7 @@ import { ThreeEvent } from "@react-three/fiber";
 type MarkerProps = {
     id: string;
     position: THREE.Vector3;
-    radius?: number;
+    size?: number;
     color?: string;
     pulse?: boolean;
     onHover?: () => void;
@@ -19,7 +19,7 @@ type MarkerProps = {
 export default function Marker({
     id,
     position,
-    radius = 0.02,
+    size = 0.02,
     color = "#ff3b30",
     pulse = false,
     onHover,
@@ -79,7 +79,7 @@ export default function Marker({
             }}
 
         >
-            <sphereGeometry args={[radius, 8, 8]} />
+            <sphereGeometry args={[size, 8, 8]} />
 
             <meshBasicMaterial
                 color={color}

@@ -9,6 +9,8 @@ import Earth from "./Earth";
 import Effects from "./Effects";
 import OrbitController from "@/components/common/OrbitController";
 import { CountryBorders } from "@/features/countries";
+import CountryMeshes from "@/features/countries/components/CountryMeshes";
+import CameraObserver from "@/components/world/CameraObserver";
 
 type Props = {
     active: boolean;
@@ -34,11 +36,11 @@ export default function EarthScene({ active }: Props) {
 
                 <Earth active={active} />
 
+                <CountryMeshes />
                 <CountryBorders />
 
-
                 <Effects />
-
+                <CameraObserver />
                 <OrbitController />
             </Canvas>
         </div>

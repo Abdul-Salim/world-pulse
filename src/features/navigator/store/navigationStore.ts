@@ -8,7 +8,7 @@ export interface NavigationTarget {
     lat: number;
     lon: number;
 
-    type: "city" | "country" | "earthquake";
+    type: "city" | "country" | "earthquake" | "flight";
 
     metadata?: unknown;
 }

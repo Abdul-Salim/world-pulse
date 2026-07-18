@@ -11,7 +11,8 @@ export default function EarthSurface() {
     const mesh = useRef<THREE.Mesh>(null);
 
     return (
-        <mesh ref={mesh}>
+        <mesh onClick={() => console.log("Clear")}
+            ref={mesh}>
             <sphereGeometry args={[EARTH_RADIUS, 256, 256]} />
 
             <EarthMaterial />

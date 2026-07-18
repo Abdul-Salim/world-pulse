@@ -13,6 +13,7 @@ export default function CountryBorders() {
                     <CountryBorder
                         key={`${country.id}-${index}`}
                         points={border}
+                        country={country}
                     />
                 ))
             )}
