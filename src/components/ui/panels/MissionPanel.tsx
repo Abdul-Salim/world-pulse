@@ -3,13 +3,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
-import { cameraController } from "@/controllers/CameraController";
-import { useNavigationStore } from "@/features/navigator/store/navigationStore";
+import { useTargetStore } from "@/features/navigator/store/targetStore";
 import { Earthquake } from "@/features/earthquakes/types/earthquake";
+import { WeatherData } from "@/features/weather/types/weather";
+import { describeWeatherCode } from "@/features/weather/utils/weatherCode";
 
 export default function MissionPanel() {
-    const target = useNavigationStore((s) => s.target);
-    const setTarget = useNavigationStore((s) => s.setTarget);
+    const target = useTargetStore((s) => s.target);
+    const setTarget = useTargetStore((s) => s.setTarget);
 
     if (!target) return null;
 
@@ -74,13 +75,22 @@ export default function MissionPanel() {
                         </p>
                     </div>
 
-                    {target.type === "earthquake" ? (
+                    {target.type === "earthquake" && (
                         <EarthquakeDetails
                             quake={target.metadata as Earthquake}
                         />
-                    ) : (
-                        <DefaultDetails target={target} />
                     )}
+
+                    {target.type === "weather" && (
+                        <WeatherDetails
+                            weather={target.metadata as WeatherData | null}
+                        />
+                    )}
+
+                    {target.type !== "earthquake" &&
+                        target.type !== "weather" && (
+                            <DefaultDetails target={target} />
+                        )}
                 </div>
             </motion.aside>
         </AnimatePresence>
@@ -143,6 +153,61 @@ function EarthquakeDetails({
             <InfoRow
                 label="Longitude"
                 value={quake.longitude.toFixed(4)}
+            />
+        </div>
+    );
+}
+
+function WeatherDetails({
+    weather,
+}: {
+    weather: WeatherData | null;
+}) {
+    if (!weather) {
+        return (
+            <p className="text-white/50">
+                Fetching conditions for this point...
+            </p>
+        );
+    }
+
+    const { current } = weather;
+
+    return (
+        <div className="space-y-6">
+            <InfoRow
+                label="Condition"
+                value={describeWeatherCode(current.weatherCode)}
+            />
+
+            <InfoRow
+                label="Feels Like"
+                value={`${Math.round(current.feelsLike)}°C`}
+            />
+
+            <InfoRow
+                label="Humidity"
+                value={`${current.humidity}%`}
+            />
+
+            <InfoRow
+                label="Pressure"
+                value={`${current.pressure} hPa`}
+            />
+
+            <InfoRow
+                label="Wind"
+                value={`${Math.round(current.windSpeed)} km/h`}
+            />
+
+            <InfoRow
+                label="Cloud Cover"
+                value={`${current.cloudCover}%`}
+            />
+
+            <InfoRow
+                label="Precipitation"
+                value={`${current.precipitation} mm`}
             />
         </div>
     );

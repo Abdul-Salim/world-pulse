@@ -5,25 +5,22 @@ import { AnimatePresence } from "motion/react";
 
 import BootSequence from "@/components/boot/BootSequence";
 import EarthScene from "@/components/ui/globe/EarthScene";
-import EarthquakePanel from "../ui/globe/EarthquakePanel";
 import HoverTooltip from "../ui/HoverTooltip";
-import { useEarthquakeStore } from "@/features/earthquakes";
-import { useAppStore } from "@/store/appStore";
 import MissionPanel from "../ui/panels/MissionPanel";
 import CountryTooltip from "../ui/CountryTooltip";
 import Navigator from "@/features/navigator/components/Navigator";
 import Header from "../ui/header/Header";
+import WeatherLegend from "@/features/weather/components/WeatherLegend";
+import { useTargetStore } from "@/features/navigator/store/targetStore";
+import { useAppStore } from "@/store/appStore";
+import { LayerType } from "@/types/layers";
 
 export default function WorldPulse() {
     const [bootComplete, setBootComplete] = useState(false);
 
-    const setSelectedEarthquake = useEarthquakeStore(
-        (state) => state.setSelectedEarthquake
-    );
+    const setTarget = useTargetStore((state) => state.setTarget);
 
-    const setCameraTarget = useAppStore(
-        (state) => state.setCameraTarget
-    );
+    const activeLayer = useAppStore((state) => state.activeLayer);
 
     useEffect(() => {
 
@@ -31,9 +28,7 @@ export default function WorldPulse() {
 
             if (e.key === "Escape") {
 
-                setSelectedEarthquake(null);
-
-                setCameraTarget(null);
+                setTarget(null);
 
             }
 
@@ -55,7 +50,9 @@ export default function WorldPulse() {
             <EarthScene active={bootComplete} />
 
             {bootComplete && <Header />}
-            <EarthquakePanel />
+            {bootComplete && activeLayer === LayerType.WEATHER && (
+                <WeatherLegend />
+            )}
             <AnimatePresence>
                 {!bootComplete && (
                     <BootSequence

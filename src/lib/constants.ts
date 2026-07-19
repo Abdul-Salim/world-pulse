@@ -8,6 +8,8 @@ export const CLOUD_ROTATION_SPEED = 0.010;
 
 export const MARKER_RADIUS = EARTH_RADIUS + 0.02;
 
+export const WEATHER_LAYER_RADIUS = EARTH_RADIUS + 0.025;
+
 export const FLIGHT_LOD = [
 
     {

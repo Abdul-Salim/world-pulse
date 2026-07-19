@@ -27,7 +27,7 @@ export default function OrbitController() {
             enableDamping
             dampingFactor={0.08}
             rotateSpeed={0.7}
-            minDistance={1.5}
+            minDistance={2}
             maxDistance={10}
         />
     );

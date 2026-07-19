@@ -11,6 +11,7 @@ import OrbitController from "@/components/common/OrbitController";
 import { CountryBorders } from "@/features/countries";
 import CountryMeshes from "@/features/countries/components/CountryMeshes";
 import CameraObserver from "@/components/world/CameraObserver";
+import CountryLabels from "@/features/countries/components/CountryLabels";
 
 type Props = {
     active: boolean;
@@ -38,6 +39,7 @@ export default function EarthScene({ active }: Props) {
 
                 <CountryMeshes />
                 <CountryBorders />
+                <CountryLabels />
 
                 <Effects />
                 <CameraObserver />

@@ -8,7 +8,7 @@ import { cameraController } from "@/controllers/CameraController";
 import { useEarthquakeStore } from "@/features/earthquakes";
 import { Earthquake } from "@/features/earthquakes/types/earthquake";
 
-import { useNavigationStore } from "@/features/navigator/store/navigationStore";
+import { useTargetStore } from "@/features/navigator/store/targetStore";
 
 type Props = {
     quake: Earthquake;
@@ -25,11 +25,11 @@ export default function EarthquakeMarker({
         (s) => s.setHoveredEarthquake
     );
 
-    const target = useNavigationStore(
+    const target = useTargetStore(
         (s) => s.target
     );
 
-    const setTarget = useNavigationStore(
+    const setTarget = useTargetStore(
         (s) => s.setTarget
     );
 
@@ -40,7 +40,7 @@ export default function EarthquakeMarker({
         <Marker
             id={`quake-${quake.id}`}
             position={position}
-            radius={Math.max(
+            size={Math.max(
                 0.012,
                 quake.magnitude * 0.006
             )}

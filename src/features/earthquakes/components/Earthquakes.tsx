@@ -3,6 +3,7 @@
 import useEarthquakes from "@/features/earthquakes/hooks/useEarthquakes";
 import { latLngToVector } from "@/utils/latLngToVector";
 import { EarthquakeMarker } from "@/features/earthquakes";
+import { MARKER_RADIUS } from "@/lib/constants";
 
 function getMagnitudeColor(mag: number) {
 
@@ -25,7 +26,7 @@ export default function Earthquakes() {
                 const pos = latLngToVector(
                     quake.latitude,
                     quake.longitude,
-                    2.03
+                    MARKER_RADIUS
                 );
 
                 return (
