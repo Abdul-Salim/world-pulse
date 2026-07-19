@@ -9,17 +9,19 @@ import * as THREE from "three";
 import { EARTH_RADIUS } from "@/lib/constants";
 import { latLngToVector } from "@/utils/latLngToVector";
 
-import { useNavigationStore } from "../store/navigationStore";
+import { useTargetStore } from "../store/targetStore";
 
 const MARKER_OFFSET = 0.05;
 
 export default function NavigationMarker() {
     const group = useRef<THREE.Group>(null);
 
-    const target = useNavigationStore((s) => s.target);
+    const target = useTargetStore((s) => s.target);
 
+    // Flights already have their own marker (the plane sprite itself),
+    // so skip the generic pin for them.
     const position = useMemo(() => {
-        if (!target) return null;
+        if (!target || target.type === "flight") return null;
 
         return latLngToVector(
             target.lat,

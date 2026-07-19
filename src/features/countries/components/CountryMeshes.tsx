@@ -11,7 +11,7 @@ function CountryMeshes() {
         <>
             {countries.map(country => (
                 <CountryMesh
-                    key={country.id}
+                    key={country.name}
                     country={country}
                 />
             ))}

@@ -1,5 +1,3 @@
-import * as THREE from "three"
-
 export interface Flight {
     id: string;
     icao24: string;
@@ -19,7 +17,6 @@ export interface Flight {
     
     lastContact: number;
     updatedAt: number;
-    position: THREE.Vector3
 }
 
 

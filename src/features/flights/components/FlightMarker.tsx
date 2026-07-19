@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
-import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import { ThreeEvent, useFrame, useLoader, useThree } from "@react-three/fiber";
 
-import { cameraController } from "@/controllers/CameraController";
-import { useNavigationStore } from "@/features/navigator/store/navigationStore";
+import { useTargetStore } from "@/features/navigator/store/targetStore";
 
 import { Flight } from "../types/flight";
+import { useFlightHoverStore } from "../store/flightHoverStore";
 
 type Props = {
     flight: Flight;
@@ -27,18 +27,24 @@ export default function FlightMarker({
 
     const { camera } = useThree();
 
-    const setTarget = useNavigationStore(
+    const setTarget = useTargetStore(
         (s) => s.setTarget
     );
 
-    const target = useNavigationStore(
+    const target = useTargetStore(
         (s) => s.target
+    );
+
+    const setHoveredFlight = useFlightHoverStore(
+        (s) => s.setHoveredFlight
     );
 
     const selected =
         target?.id === `flight-${flight.id}`;
 
-    const handleClick = () => {
+    const handleClick = (e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation();
+
         setTarget({
             id: `flight-${flight.id}`,
             title: flight.callsign,
@@ -48,14 +54,34 @@ export default function FlightMarker({
             type: "flight",
             metadata: flight,
         });
+    };
 
-        cameraController.flyToLatLng(
-            flight.latitude,
-            flight.longitude,
-            {
-                distance: 2.2,
-            }
-        );
+    const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+
+        document.body.style.cursor = "pointer";
+
+        setHoveredFlight(flight, {
+            x: e.clientX,
+            y: e.clientY,
+        });
+    };
+
+    const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+
+        setHoveredFlight(flight, {
+            x: e.clientX,
+            y: e.clientY,
+        });
+    };
+
+    const handlePointerOut = (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+
+        document.body.style.cursor = "default";
+
+        setHoveredFlight(null);
     };
 
     useFrame(() => {
@@ -75,8 +101,11 @@ export default function FlightMarker({
             ref={meshRef}
             position={position}
             onClick={handleClick}
+            onPointerOver={handlePointerOver}
+            onPointerMove={handlePointerMove}
+            onPointerOut={handlePointerOut}
         >
-            {/* <planeGeometry args={[0.06, 0.06]} /> */}
+            <planeGeometry args={[0.06, 0.06]} />
 
             <meshBasicMaterial
                 map={texture}

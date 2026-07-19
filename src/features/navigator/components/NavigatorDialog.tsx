@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useNavigatorStore } from "../store/navigatorStore";
-import { useNavigationStore } from "../store/navigationStore";
+import { useTargetStore } from "../store/targetStore";
 import useNavigator from "../hooks/useNavigator";
 
 import NavigatorInput from "./NavigatorInput";
@@ -17,7 +17,7 @@ export default function NavigatorDialog() {
     const setQuery = useNavigatorStore((s) => s.setQuery);
     const clear = useNavigatorStore((s) => s.clear);
 
-    const setTarget = useNavigationStore((s) => s.setTarget);
+    const setTarget = useTargetStore((s) => s.setTarget);
 
     const inputRef = useRef<HTMLInputElement>(null);
 

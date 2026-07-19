@@ -7,6 +7,14 @@ import { useTargetStore } from "@/features/navigator/store/targetStore";
 import { Earthquake } from "@/features/earthquakes/types/earthquake";
 import { WeatherData } from "@/features/weather/types/weather";
 import { describeWeatherCode } from "@/features/weather/utils/weatherCode";
+import { Flight } from "@/features/flights/types/flight";
+import {
+    formatAltitude,
+    formatHeading,
+    formatLastContact,
+    formatSpeed,
+    formatVerticalRate,
+} from "@/features/flights/utils/format";
 
 export default function MissionPanel() {
     const target = useTargetStore((s) => s.target);
@@ -87,8 +95,15 @@ export default function MissionPanel() {
                         />
                     )}
 
+                    {target.type === "flight" && (
+                        <FlightDetails
+                            flight={target.metadata as Flight}
+                        />
+                    )}
+
                     {target.type !== "earthquake" &&
-                        target.type !== "weather" && (
+                        target.type !== "weather" &&
+                        target.type !== "flight" && (
                             <DefaultDetails target={target} />
                         )}
                 </div>
@@ -208,6 +223,66 @@ function WeatherDetails({
             <InfoRow
                 label="Precipitation"
                 value={`${current.precipitation} mm`}
+            />
+        </div>
+    );
+}
+
+function FlightDetails({
+    flight,
+}: {
+    flight: Flight;
+}) {
+    return (
+        <div className="space-y-6">
+            <InfoRow
+                label="Status"
+                value={flight.onGround ? "On Ground" : "Airborne"}
+            />
+
+            <InfoRow
+                label="Altitude"
+                value={formatAltitude(flight.altitude)}
+            />
+
+            <InfoRow
+                label="Speed"
+                value={formatSpeed(flight.velocity)}
+            />
+
+            <InfoRow
+                label="Heading"
+                value={formatHeading(flight.heading)}
+            />
+
+            <InfoRow
+                label="Vertical Rate"
+                value={formatVerticalRate(flight.verticalRate)}
+            />
+
+            <InfoRow
+                label="Origin Country"
+                value={flight.originCountry}
+            />
+
+            <InfoRow
+                label="ICAO24"
+                value={flight.icao24}
+            />
+
+            <InfoRow
+                label="Last Contact"
+                value={formatLastContact(flight.lastContact)}
+            />
+
+            <InfoRow
+                label="Latitude"
+                value={flight.latitude.toFixed(4)}
+            />
+
+            <InfoRow
+                label="Longitude"
+                value={flight.longitude.toFixed(4)}
             />
         </div>
     );

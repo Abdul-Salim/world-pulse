@@ -14,7 +14,7 @@ interface WeatherStore {
 }
 
 export const useWeatherStore = create<WeatherStore>((set) => ({
-  activeTileLayer: "temp",
+  activeTileLayer: "clouds",
   isLoading: false,
 
   setIsLoading: (loading) =>

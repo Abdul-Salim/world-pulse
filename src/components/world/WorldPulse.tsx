@@ -8,6 +8,7 @@ import EarthScene from "@/components/ui/globe/EarthScene";
 import HoverTooltip from "../ui/HoverTooltip";
 import MissionPanel from "../ui/panels/MissionPanel";
 import CountryTooltip from "../ui/CountryTooltip";
+import FlightTooltip from "@/features/flights/components/FlightTooltip";
 import Navigator from "@/features/navigator/components/Navigator";
 import Header from "../ui/header/Header";
 import WeatherLegend from "@/features/weather/components/WeatherLegend";
@@ -44,6 +45,7 @@ export default function WorldPulse() {
         <main className="relative h-screen w-screen overflow-hidden bg-black">
             <HoverTooltip />
             <CountryTooltip />
+            <FlightTooltip />
             <MissionPanel />
             <Navigator />
 
