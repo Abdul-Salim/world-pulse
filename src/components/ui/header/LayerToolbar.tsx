@@ -3,7 +3,6 @@
 import {
     Plane,
     Cloud,
-    Ship,
     Satellite,
     TriangleAlert,
 } from "lucide-react";
@@ -26,11 +25,6 @@ const layers = [
         type: LayerType.WEATHER,
         label: "Weather",
         icon: Cloud,
-    },
-    {
-        type: LayerType.SHIPS,
-        label: "Ships",
-        icon: Ship,
     },
     {
         type: LayerType.SATELLITES,

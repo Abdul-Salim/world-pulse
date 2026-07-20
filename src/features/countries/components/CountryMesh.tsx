@@ -18,7 +18,6 @@ function CountryMesh({ country }: Props) {
             onClick={(e) => {
 
                 e.stopPropagation();
-                console.log("hiiiii", country)
                 setSelectedRegion({
                     id: country.id,
                     name: country.name,

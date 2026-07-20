@@ -57,7 +57,7 @@ export default function FlightProvider({
 
         const interval = setInterval(
             load,
-            30000
+            180000
         );
 
         return () => {

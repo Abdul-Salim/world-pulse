@@ -12,11 +12,11 @@ export function LoadingOverlay({
 
     return (
         <div className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
-            <div className="rounded-xl border border-white/10 bg-black/55 px-6 py-5 backdrop-blur-md">
+            <div className="rounded-xl border border-white/10 bg-black/55 p-10 lg:px-20 backdrop-blur-md">
                 <div className="flex flex-col items-center gap-3">
                     <div className="h-10 w-10 animate-spin rounded-full border-4 border-white/20 border-t-white" />
 
-                    <p className="text-sm font-medium tracking-wide text-white">
+                    <p className="text-sm font-medium tracking-wide text-white whitespace-nowrap">
                         {text}
                     </p>
                 </div>
