@@ -54,17 +54,6 @@ export default function FlightProvider({
         }
 
         load();
-
-        const interval = setInterval(
-            load,
-            180000
-        );
-
-        return () => {
-            mounted = false;
-            clearInterval(interval);
-        };
-
     }, []);
 
     return children;

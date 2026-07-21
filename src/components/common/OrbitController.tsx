@@ -10,7 +10,7 @@ import { cameraController } from "@/controllers/CameraController";
 import { EARTH_RADIUS } from "@/lib/constants";
 
 const MIN_DISTANCE = EARTH_RADIUS + 1;
-const MAX_DISTANCE = 12;
+const MAX_DISTANCE = 18;
 const POLE_GUARD = 0.15;
 
 export default function OrbitController() {
