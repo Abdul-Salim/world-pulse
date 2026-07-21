@@ -1,11 +1,15 @@
 "use client";
 
+import { useAppStore } from "@/store/appStore";
 import LayerToolbar from "./LayerToolbar";
 import Logo from "./Logo";
 import SearchPill from "./SearchPill";
 import StatusBar from "./StatusBar";
+import { LayerType } from "@/types/layers";
+import { SatelliteSearch } from "@/features/satellites";
 
 export default function Header() {
+    const layer = useAppStore((s) => s.activeLayer);
     return (
         <header
             className="
@@ -36,7 +40,11 @@ export default function Header() {
 
             <div className="pointer-events-auto">
 
-                <SearchPill />
+                {layer === LayerType.SATELLITES ?
+                    <SatelliteSearch />
+                    :
+                    <SearchPill />
+                }
 
             </div>
         </header>

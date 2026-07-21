@@ -17,7 +17,6 @@ export default function useEarthquakes() {
             try {
                 setLoading(true)
                 const response = await getEarthquakes();
-                console.log(response);
                 setEarthquakes(response);
                 setLoading(false)
             }

@@ -1,0 +1,1 @@
+export const SATELLITE_UPDATE_INTERVAL_MS = 1000;
