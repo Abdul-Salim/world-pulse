@@ -12,6 +12,11 @@ import { LayerType } from "@/types/layers";
 
 const layers = [
     {
+        type: LayerType.SATELLITES,
+        label: "Satellites",
+        icon: Satellite,
+    },
+    {
         type: LayerType.EARTHQUAKES,
         label: "Earthquakes",
         icon: TriangleAlert,
@@ -25,11 +30,6 @@ const layers = [
         type: LayerType.WEATHER,
         label: "Weather",
         icon: Cloud,
-    },
-    {
-        type: LayerType.SATELLITES,
-        label: "Satellites",
-        icon: Satellite,
     },
 ];
 

@@ -25,6 +25,13 @@ export default function Satellites() {
     const meshRef = useRef<THREE.InstancedMesh>(null);
     const instanceLookup = useRef<Satellite[]>([]);
 
+    const selectedSatelliteId = useSatelliteStore((s) => s.selectedSatelliteId);
+    const selectedSatellite = useMemo(
+        () => satellites.find((sat) => sat.id === selectedSatelliteId) ?? null,
+        [satellites, selectedSatelliteId]
+    );
+    const selectedDummy = useMemo(() => new THREE.Object3D(), []);
+
     // Each satellite's last two known positions + when the transition
     // between them started. useFrame lerps between these every frame so
     // motion stays continuous between the ~1s physics updates instead of
@@ -94,6 +101,7 @@ export default function Satellites() {
 
         mesh.count = instance;
         mesh.instanceMatrix.needsUpdate = true;
+        mesh.computeBoundingSphere();
 
         if (mesh.instanceColor) {
             mesh.instanceColor.needsUpdate = true;
@@ -148,6 +156,68 @@ export default function Satellites() {
         mesh.instanceMatrix.needsUpdate = true;
     });
 
+    // --- Animated pinging glow for selected satellite ---
+    const glowTexture = useSatelliteGlowTexture();
+    const glowMeshRef = useRef<THREE.Mesh>(null);
+    const pingMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
+
+    useFrame(() => {
+        if (!selectedSatellite || !glowMeshRef.current || !pingMaterialRef.current) {
+            return;
+        }
+
+        const transition = transitions.current.get(selectedSatellite.id);
+
+        let position: THREE.Vector3;
+
+        if (transition) {
+            const t = THREE.MathUtils.clamp(
+                (performance.now() - transition.start) /
+                    SATELLITE_UPDATE_INTERVAL_MS,
+                0,
+                1
+            );
+
+            position = new THREE.Vector3().lerpVectors(
+                transition.prev,
+                transition.next,
+                t
+            );
+        } else {
+            position = latLngToVector(
+                selectedSatellite.latitude,
+                selectedSatellite.longitude,
+                EARTH_RADIUS +
+                    selectedSatellite.altitude * ALTITUDE_SCALE
+            );
+        }
+
+        selectedDummy.position.copy(position);
+        selectedDummy.quaternion.copy(camera.quaternion);
+
+        // --- Pinging effect ---
+        const time = performance.now() * 0.001;
+
+        const cycleDuration = 0.6;
+
+        // 0 → 1 → 0
+        const progress = (time % cycleDuration) / cycleDuration;
+        const pulse = Math.sin(progress * Math.PI);
+
+        const maxScale = selectedSatellite.size * 5;
+
+        const pingScale = maxScale * pulse;
+
+        selectedDummy.scale.setScalar(pingScale);
+        selectedDummy.updateMatrix();
+
+        glowMeshRef.current.matrix.copy(selectedDummy.matrix);
+        glowMeshRef.current.matrixAutoUpdate = false;
+        glowMeshRef.current.visible = true;
+        pingMaterialRef.current.opacity = 1;
+    });
+
+
     const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
         event.stopPropagation();
 
@@ -175,22 +245,35 @@ export default function Satellites() {
         setSelectedSatellite(sat?.id ?? null);
     };
 
-    const glowTexture = useSatelliteGlowTexture();
-
     return (
-        <instancedMesh
-            ref={meshRef}
-            args={[undefined, undefined, satellites.length]}
-            frustumCulled={false}
-            onPointerMove={handlePointerMove}
-            onPointerOut={handlePointerOut}
-            onClick={handleClick}
-        >
-            <sphereGeometry args={[0.01, 8, 8]} />
-
-            <meshBasicMaterial
-                toneMapped={false}
-            />
-        </instancedMesh>
+        <>
+            <instancedMesh
+                ref={meshRef}
+                args={[undefined, undefined, satellites.length]}
+                frustumCulled={false}
+                onPointerMove={handlePointerMove}
+                onPointerOut={handlePointerOut}
+                onClick={handleClick}
+            >
+                <sphereGeometry args={[0.01, 8, 8]} />
+                <meshBasicMaterial toneMapped={false} />
+            </instancedMesh>
+            {/* Highlighted animated pinging glow for selected satellite */}
+            {selectedSatellite && (
+                <mesh ref={glowMeshRef}>
+                    <sphereGeometry args={[0.012, 16, 16]} />
+                    <meshBasicMaterial
+                        ref={pingMaterialRef}
+                        map={glowTexture}
+                        transparent
+                        opacity={1}
+                        depthWrite={false}
+                        toneMapped={false}
+                        color={0xff0000}
+                        blending={THREE.AdditiveBlending}
+                    />
+                </mesh>
+            )}
+        </>
     );
 }

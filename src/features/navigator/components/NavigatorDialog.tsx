@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useNavigatorStore } from "../store/navigatorStore";
@@ -11,9 +11,15 @@ import NavigatorInput from "./NavigatorInput";
 import NavigatorResults from "./NavigatorResults";
 
 import { cameraController } from "@/controllers/CameraController";
+import { fetchCurrentWeather, fetchLocationName } from "@/features/weather/api/weatherApi";
+import { mapOpenMeteoResponse } from "@/features/weather/utils/weatherMapper";
+import { NavigatorResult } from "../types/navigator";
+import { useAppStore } from "@/store/appStore";
+import { LayerType } from "@/types/layers";
 
 export default function NavigatorDialog() {
     const query = useNavigatorStore((s) => s.query);
+    const layer = useAppStore((s) => s.activeLayer)
     const setQuery = useNavigatorStore((s) => s.setQuery);
     const clear = useNavigatorStore((s) => s.clear);
 
@@ -22,10 +28,77 @@ export default function NavigatorDialog() {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const { results, loading } = useNavigator(query);
+    const [weatherLoading, setWeatherLoading] = useState(false);
 
     useEffect(() => {
         inputRef.current?.focus();
     }, []);
+
+    const handleSelect = async (result: NavigatorResult) => {
+        setTarget({
+            id: result.id,
+            title: result.title,
+            subtitle: result.subtitle,
+            lat: result.lat,
+            lon: result.lon,
+            type: result.type,
+            metadata: null,
+        });
+
+        if (layer === LayerType.WEATHER) {
+            if (result.type === "city" || result.type === "country") {
+                setWeatherLoading(true);
+                try {
+                    const [rawWeather, location] = await Promise.all([
+                        fetchCurrentWeather(result.lat, result.lon),
+                        fetchLocationName(result.lat, result.lon),
+                    ]);
+                    const weather = mapOpenMeteoResponse(rawWeather, result.lat, result.lon);
+
+                    // Compose city/country name if available
+                    const city =
+                        location.address?.city ||
+                        location.address?.town ||
+                        location.address?.village ||
+                        location.address?.municipality ||
+                        location.address?.county ||
+                        result.title;
+
+                    const country = location.address?.country ?? result.subtitle;
+
+                    setTarget({
+                        id: result.id,
+                        title: city,
+                        subtitle: country,
+                        lat: result.lat,
+                        lon: result.lon,
+                        type: "weather",
+                        metadata: weather,
+                    });
+                } catch {
+                    // On error, keep the basic info
+                    setTarget({
+                        id: result.id,
+                        title: result.title,
+                        subtitle: result.subtitle,
+                        lat: result.lat,
+                        lon: result.lon,
+                        type: result.type,
+                        metadata: null,
+                    });
+                } finally {
+                    cameraController.flyToLatLng(result.lat, result.lon);
+                    setWeatherLoading(false);
+                }
+            }
+        } else {
+            cameraController.flyToLatLng(
+                result.lat,
+                result.lon
+            );
+        }
+        clear();
+    };
 
     return (
         <AnimatePresence>
@@ -66,7 +139,6 @@ export default function NavigatorDialog() {
           "
                 >
                     {/* Header */}
-
                     <div className="border-b border-white/10 p-5">
                         <NavigatorInput
                             value={query}
@@ -75,24 +147,13 @@ export default function NavigatorDialog() {
                     </div>
 
                     {/* Results */}
-
                     <NavigatorResults
                         results={results}
-                        loading={loading}
-                        onSelect={(result) => {
-                            setTarget(result);
-
-                            cameraController.flyToLatLng(
-                                result.lat,
-                                result.lon
-                            );
-
-                            clear();
-                        }}
+                        loading={loading || weatherLoading}
+                        onSelect={handleSelect}
                     />
 
                     {/* Footer */}
-
                     <div className="flex justify-between border-t border-white/10 px-5 py-3 text-xs text-white/35">
                         <span>↑ ↓ Navigate</span>
                         <span>Enter Select</span>

@@ -23,9 +23,9 @@ export const useSatelliteGlowTexture = () => {
         );
 
         gradient.addColorStop(0, "rgba(255,255,255,1)");
-        gradient.addColorStop(0.25, "rgba(255,255,255,0.8)");
-        gradient.addColorStop(0.6, "rgba(255,255,255,0.2)");
-        gradient.addColorStop(1, "rgba(255,255,255,0)");
+        gradient.addColorStop(0.75, "rgba(255,255,255,1)");
+        gradient.addColorStop(0.95, "rgba(255,255,255,0.8)");
+        gradient.addColorStop(1, "rgba(255,255,255,0.6)");
 
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, size, size);

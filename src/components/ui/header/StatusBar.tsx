@@ -1,6 +1,9 @@
 "use client";
+import { useAppStore } from "@/store/appStore";
+import { LayerType } from "@/types/layers";
 
 export default function StatusBar() {
+    const layer = useAppStore((s) => s.activeLayer);
     return (
         <div
             className="
@@ -35,8 +38,12 @@ export default function StatusBar() {
 
             </div>
 
-            <span>
-                Updated just now
+            <span className="border border-white/10 bg-black/30 p-2 text-white capitalize cursor-default">
+                {layer === LayerType.WEATHER && "Click on a place to view it's weather"}
+                {layer === LayerType.SATELLITES && "Click on a satellite to view more details"}
+                {layer === LayerType.FLIGHTS && "Zoom in to view more flights. Click on each to view more details"}
+                {layer === LayerType.EARTHQUAKES && "Click on a dot to view more detail"}
+
             </span>
 
         </div>

@@ -10,11 +10,13 @@ interface FlyToOptions {
 }
 
 const FORWARD = new THREE.Vector3(0, 0, 1);
+const ORIGIN = new THREE.Vector3(0, 0, 0);
 
 class CameraController {
   private camera: THREE.PerspectiveCamera | null = null;
   private controls: OrbitControls | null = null;
   private currentTween: gsap.core.Tween | null = null;
+  private restoreClamps: (() => void) | null = null;
 
   private readonly DEFAULT_DISTANCE = 3;
   private readonly DEFAULT_DURATION = 1.6;
@@ -27,6 +29,23 @@ class CameraController {
   registerControls(controls: OrbitControls) {
     this.controls = controls;
     controls.target.set(0, 0, 0);
+  }
+
+  /**
+   * Enable/disable OrbitControls. Mutates the instance held on this class
+   * (set via registerControls), never a value obtained from a hook — those
+   * are deep-frozen in dev by React Compiler and throw on mutation.
+   */
+  setControlsEnabled(enabled: boolean) {
+    if (!this.controls) return;
+    this.controls.enabled = enabled;
+  }
+
+  /** Lerp controls.target toward `point` by `alpha`. Same rationale as above. */
+  lerpControlsTarget(point: THREE.Vector3, alpha: number) {
+    if (!this.controls) return;
+    this.controls.target.lerp(point, alpha);
+    this.controls.update();
   }
 
   unregisterCamera() {
@@ -73,11 +92,34 @@ class CameraController {
     const qStart = new THREE.Quaternion().setFromUnitVectors(FORWARD, startDir);
     const qEnd = new THREE.Quaternion().setFromUnitVectors(FORWARD, direction);
 
-    controls.target.set(0, 0, 0);
+    // Kill any in-flight tween first, and put its clamps back, so we never
+    // capture the relaxed values below and restore them permanently.
+    this.currentTween?.kill();
+    this.restoreClamps?.();
+    this.restoreClamps = null;
+
+    // The target may be sitting on a satellite (follow mode) rather than at
+    // the origin. Snapping it home would whip the camera round in one frame,
+    // so interpolate it alongside the position.
+    const startTarget = controls.target.clone();
+
+    // While the target is off-origin, OrbitControls' min/maxDistance are
+    // measured against it and would clamp mid-tween. Relax them until done.
+    const minDistance = controls.minDistance;
+    const maxDistance = controls.maxDistance;
+    controls.minDistance = 0;
+    controls.maxDistance = Infinity;
+
+    const restore = () => {
+      controls.minDistance = minDistance;
+      controls.maxDistance = maxDistance;
+      this.restoreClamps = null;
+    };
+
+    this.restoreClamps = restore;
 
     const state = { t: 0 };
 
-    this.currentTween?.kill();
     this.currentTween = gsap.to(state, {
       t: 1,
       duration,
@@ -90,12 +132,16 @@ class CameraController {
         const dist = THREE.MathUtils.lerp(startDistance, endDistance, t);
 
         this.camera.position.copy(dir.multiplyScalar(dist));
-        this.controls.target.set(0, 0, 0);
+        this.controls.target.lerpVectors(startTarget, ORIGIN, t);
         this.controls.update();
       },
       onComplete: () => {
+        restore();
+        controls.target.set(0, 0, 0);
+        controls.update();
         this.currentTween = null;
       },
+      onInterrupt: restore,
     });
   }
 }
