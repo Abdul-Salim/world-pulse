@@ -8,7 +8,7 @@ type AppState = {
 };
 
 export const useAppStore = create<AppState>((set) => ({
-  activeLayer: LayerType.EARTHQUAKES,
+  activeLayer: LayerType.SATELLITES,
 
   setActiveLayer: (layer) =>
     set({

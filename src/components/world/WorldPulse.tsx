@@ -55,6 +55,17 @@ export default function WorldPulse() {
             {bootComplete && activeLayer === LayerType.WEATHER && (
                 <WeatherLegend />
             )}
+            {bootComplete && activeLayer === LayerType.FLIGHTS && (
+                <div className="absolute bottom-8 left-8 z-40 lg:w-1/3">
+                    <p className="text-white/45 text-xs">
+                        Flight data provided by the OpenSky Network.
+                        Data source:
+                        OpenSky Network
+                        &quot;Bringing Up OpenSky: A Large-scale ADS-B Sensor Network for Research&quot;
+                        Schäfer et al., IPSN 2014
+                    </p>
+                </div>
+            )}
             <AnimatePresence>
                 {!bootComplete && (
                     <BootSequence
